@@ -1,4 +1,32 @@
+import axios from "axios";
+
 const Card = (article) => {
+  console.log(article);
+
+  const card = document.createElement('div');
+  const headline = document.createElement('div');
+  const author = document.createElement('div');
+  const imgContain = document.createElement('div');
+  const image = document.createElement('img');
+  const whoBy = document.createElement('span');
+
+  card.appendChild(headline);
+  card.appendChild(author);
+  author.appendChild(imgContain);
+  author.appendChild(whoBy);
+  imgContain.appendChild(image);
+
+  headline.textContent = article.headline;
+  whoBy.textContent = article.authorName;
+
+  card.classList.add('card');
+  headline.classList.add('headline');
+  author.classList.add('author');
+  imgContain.classList.add('img-container');
+  image.src = article.authorPhoto;
+
+  return card;
+
   // TASK 5
   // ---------------------
   // Implement this function, which should return the markup you see below.
@@ -19,8 +47,27 @@ const Card = (article) => {
   //
 }
 
-const cardAppender = (selector) => {
-  // TASK 6
+
+
+
+const cardAppender = async (selector) => {
+  try{
+    const resp = await axios.get('http://localhost:5000/api/articles');
+    const article = resp.data.articles;
+    const allArr = article.javascript.concat(article.bootstrap,article.technology,article.jquery,article.node);
+    const selectAll = document.querySelector(selector);
+    allArr.forEach(item =>{
+      selectAll.appendChild(Card(item));
+    })
+    
+    
+    
+  }
+  catch{
+    console.log("Task 6 Failure");
+  }
+  }
+// TASK 6
   // ---------------------
   // Implement this function that takes a css selector as its only argument.
   // It should obtain articles from this endpoint: `http://localhost:5000/api/articles` (test it in Postman/HTTPie!).
@@ -28,6 +75,4 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
-}
-
 export { Card, cardAppender }
